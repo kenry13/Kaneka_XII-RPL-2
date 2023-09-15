@@ -1,6 +1,8 @@
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -45,9 +47,10 @@ public class AplikasiKontak {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ArrayList<Kontak> daftarKontak = new ArrayList<>();
+        loadFromFile(daftarKontak);
         boolean loop = true;
 
-        while (loop) {
+    while (loop) {
             System.out.println("==================================");
             System.out.println("           MENU KONTAK            ");
             System.out.println("==================================");
@@ -148,4 +151,32 @@ public class AplikasiKontak {
             e.printStackTrace();
         }
     }
+
+     private static void loadFromFile(ArrayList<Kontak> daftarKontak) {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("Kontak.txt"));
+            String line;
+            
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("nama  :")) {
+                    String nama = line.substring(7); // Mengambil nama setelah "nama  :"
+                    String email = reader.readLine().substring(7);
+                    String alamat = reader.readLine().substring(8);
+                    String nomor = reader.readLine().substring(7);
+
+                    Kontak kontak = new Kontak(nama, email, alamat, nomor);
+                    daftarKontak.add(kontak);
+
+                    // Membaca garis pemisah dan mengabaikannya
+                    reader.readLine();
+                }
+            }
+
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
 }
+
